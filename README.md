@@ -1,24 +1,41 @@
 iOS Good Practices
 ==================
+iOS 最佳实践
+==================
 
 _Just like software, this document will rot unless we take care of it. We encourage everyone to help us on that – just open an issue or send a pull request!_
 
+_这份文档就像软件项目一样，如果我们不维护它就会逐渐腐坏。欢迎大家跟我们一起来维护它——只需提交 issue 或者发 pull request 即可！_
+
 Interested in other mobile platforms? Our [Best Practices in Android Development][android-best-practices] and [Windows App Development Best Practices][windows-app-development-best-practices] documents have got you covered.
+
+对其他移动平台感兴趣？也许我们的[《Android 开发最佳实践》][android-best-practices]以及[《Windows App 开发 最佳实践》][windows-app-development-best-practices]能满足你。
 
 [android-best-practices]: https://github.com/futurice/android-best-practices
 [windows-app-development-best-practices]: https://github.com/futurice/windows-app-development-best-practices
 
 ## Why?
+## 为什么要写这篇文档？
 
 Getting on board with iOS can be intimidating. Neither Swift nor Objective-C are widely used elsewhere, the platform has its own names for almost everything, and it's a bumpy road for your code to actually make it onto a physical device. This living document is here to help you, whether you're taking your first steps in Cocoaland or you're curious about doing things "the right way". Everything below is just suggestions, so if you have a good reason to do something differently, by all means go for it!
 
+iOS 开发在上手时可能会有些令人生畏。无论是 Objective-C 还是 Swift 在别处都没有广泛的应用，iOS 这个平台几乎对一切都有一套不同的叫法，而尝试把你的代码跑在真机上的过程难免磕磕碰碰。这份持续更新的文档就是来帮你的，无论你是 Cocoa 王国的新手，或是想知道“最佳做法”是什么，都可以一读。下文仅供参考，如果你有理由采取不同的做法，不用顾虑，只管做吧！
+
 ## Getting Started
+
+## 上手
+
+### Xcode
 
 ### Xcode
 
 [Xcode][xcode] is the IDE of choice for most iOS developers, and the only one officially supported by Apple. There are some alternatives, of which [AppCode][appcode] is arguably the most famous, but unless you're already a seasoned iOS person, go with Xcode. Despite its shortcomings, it's actually quite usable nowadays!
 
+[Xcode][xcode] 是绝大部分 iOS 开发者选择的 IDE，也是唯一一个苹果官方支持的 IDE。也有一些其他选择，最著名的可能要数 [AppCode][appcode] 了。但除非你已经对 iOS 游刃有余，否则还是用 Xcode 吧。尽管 Xcode 有一些缺点，它现在还算是相当实用的！
+
 To install, simply download [Xcode on the Mac App Store][xcode-app-store]. It comes with the newest SDK and simulators, and you can install more stuff under _Preferences > Downloads_.
+
+要安装 Xcode，只需在 [Mac 的 App Score][xcode-app-store] 上下载即可。它自带最新版的 SDK 和 iOS 模拟器，其他版本可以在 _Preferences > Downloads_ 处安装。
 
 [xcode]: https://developer.apple.com/xcode/
 [appcode]: https://www.jetbrains.com/objc/
@@ -26,26 +43,43 @@ To install, simply download [Xcode on the Mac App Store][xcode-app-store]. It co
 
 ### Project Setup
 
+### 建立工程
+
 A common question when beginning an iOS project is whether to write all views in code or use Interface Builder with Storyboards or XIB files. Both are known to occasionally result in working software. However, there are a few considerations:
 
+开始一个新的 iOS 项目时，一个常见的问题是：用代码写界面还是用 Storyboard、xib 画界面。在现有的应用里，这两种做法都占有一席之地。你需要考虑以下几点：
+
 #### Why code?
+#### 用代码写界面有哪些好处？
 * Storyboards are more prone to version conflicts due to their complex XML structure. This makes merging much harder than with code.
+* Storyboard 的 XML 结构很复杂，所以如果用 Storyboard ，合并代码时很容易冲突，比起用代码写的界面要麻烦许多。
 * It's easier to structure and reuse views in code, thereby keeping your codebase [DRY][dry].
+* 用代码写界面时，构建和重用 view 更加方便，因此能保持你的 codebase 遵循[DRY 原则][dry]。
 * All information is in one place. In Interface Builder you have to click through all the inspectors to find what you're looking for.
+* 所有的信息都集中在一处。如果用 Interface Builder，你还得到处点开各种检查器，才能找到你要设置的属性。
 
 [dry]: http://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 
 #### Why Storyboards?
+#### 用 Storyboard 画界面有哪些好处？
 * For the less technically inclined, Storyboards can be a great way to contribute to the project directly, e.g. by tweaking colors or layout constraints. However, this requires a working project setup and some time to learn the basics.
+* 对技术不太熟悉的人也可以画 Storyboard，调整颜色、layout 约束，为项目做出直接贡献。不过，要做这些需要工程已经建好，并且也要了解一些基本知识。
 * Iteration is often faster since you can preview certain changes without building the project.
+* 开发迭代会更快，因为不需要 build 工程就能预览到做出的改动。
 * In Xcode 6, custom fonts and UI elements are finally represented visually in Storyboards, giving you a much better idea of the final appearance while designing.
+* 在 Xcode 6 中，在 Storyboard 里终于能看到自定义的字体和 UI 控件样式了。这让你在设计时能更好地了解界面的最终外观。
 * Starting with iOS 8, [Size Classes][size-classes] allow you to design for different device types and screens without duplication.
+* 从 iOS 8 开始，你可以用 Size Classes 来设计同时支持各种屏幕尺寸的界面，省去了很多重复工作。
 
 [size-classes]: http://blog.futurice.com/adaptive-view-ios8
 
 ### Ignores
 
+### gitignore 文件
+
 A good first step when putting a project under version control is to have a decent `.gitignore` file. That way, unwanted files (user settings, temporary files, etc.) will never even make it into your repository. Luckily, GitHub has us covered for both [Objective-C][objc-gitignore] and [Swift][swift-gitignore].
+
+要为一个项目添加版本控制，最好第一步就弄一个恰当的`.gitignore`文件。这样一来，不需要的文件（例如用户设置、临时文件等等）就不会进入 repository 了。幸运的是，Github 帮我们同时准备好了 [Objective-C 版][objc-gitignore] 和 [Swift 版][swift-gitignore]。
 
 [objc-gitignore]: https://github.com/github/gitignore/blob/master/Objective-C.gitignore
 [swift-gitignore]: https://github.com/github/gitignore/blob/master/Swift.gitignore
