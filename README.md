@@ -128,6 +128,8 @@ will update all pods to the newest versions permitted by the Podfile. You can us
 
 To keep all those hundreds of source files ending up in the same directory, it's a good idea to set up some folder structure depending on your architecture. For instance, you can use the following:
 
+既然把这些数以百计的源文件都保存在同一目录下，根据工程结构来建立一个目录结构是个好主意。例如，你可以使用以下的结构：
+
     ├─ Models
     ├─ Views
     ├─ Controllers
@@ -136,15 +138,25 @@ To keep all those hundreds of source files ending up in the same directory, it's
 
 First, create them as groups (little yellow "folders") within the group with your project's name in Xcode's Project Navigator. Then, for each of the groups, link them to an actual directory in your project path by opening their File Inspector on the right, hitting the little gray folder icon, and creating a new subfolder with the name of the group in your project directory.
 
+首先，在 Xcode 的 Project Navigator（左边栏）里，把这些目录建立为 group（小小的黄色“文件夹”），建在与工程的同名的 group 下。然后，把每一个 group 与工程路径下实际的文件夹链接起来，方法是选中 group，打开右边栏的 File Inspector，点击小小的灰色文件夹 icon，然后在工程目录下创建一个新的子文件夹，名称与 group 相同。
+
 #### Localization
 
+#### 本地化
+
 Keep all user strings in localization files right from the beginning. This is good not only for translations, but also for finding user-facing text quickly. You can add a launch argument to your build scheme to launch the app in a certain language, e.g.
+
+从最开始就要把所有的文案放在本地化文件里。这不仅有利于翻译，也能让你更快地找到面向用户的文字。你可以在 build scheme 里添加一个 launch 参数，指定在某种语言下启动 app，例如：
 
     -AppleLanguages (Finnish)
 
 For more complex translations such as plural forms that depending on a number of items (e.g. "1 person" vs. "3 people"), you should use the [`.stringsdict` format][stringsdict-format] instead of a regular `localizable.strings` file. As soon as you've wrapped your head around the crazy syntax, you have a powerful tool that knows how to make plurals for "one", some", "few" and "many" items, as needed [e.g. in Russian or Arabic][language-plural-rules].
 
+对于更复杂的翻译，比如与名词的数量有关的复数形式（如 "1 person" 对应 "3 people"），你应该使用[`.stringsdict` 格式][stringsdict-format]来替换普通的`localizable.strings`文件。只要你能习惯这种奇特的语法，你就拥有了一个强大的工具，可以根据需要（[例如俄语或阿拉伯语的规则][language-plural-rules]）把名词变为“一个”、“一些”、“少数”和“许多”等复数形式。
+
 Find more information about localization in [these presentation slides][l10n-slides] from the February 2012 HelsinkiOS meetup. Most of the talk is still relevant in October 2014.
+
+更多关于本地化的信息，请参考 2012 年 2 月 HelsinkiOS 大会上的[这些幻灯片][l10n-slides]。其中的大部分演讲至少到 2014 年 10 月为止仍然是不过时的。
 
 [stringsdict-format]: https://developer.apple.com/library/prerelease/ios/documentation/MacOSX/Conceptual/BPInternational/StringsdictFileFormat/StringsdictFileFormat.html
 [language-plural-rules]: http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html
@@ -152,19 +164,30 @@ Find more information about localization in [these presentation slides][l10n-sli
 
 #### Constants
 
+#### 常量
+
 Keep app-wide constants in a `Constants.h` file that is included in the prefix header.
 
+把整个 app 范围的常量定义在一个`Constants.h`文件里，然后在 prefix header 里 include 这个文件。
+
 Instead of preprocessor macro definitions (via `#define`), use actual constants:
+
+不要再用 `#define` 这类预处理宏定义了，改成用 actual constant：
 
     static CGFloat const XYZBrandingFontSizeSmall = 12.0f;
     static NSString * const XYZAwesomenessDeliveredNotificationName = @"foo";
 
 Actual constants are type-safe, have more explicit scope (they’re not available in all imported/included files until undefined), cannot be redefined or undefined in later parts of the code, and are available in the debugger.
 
+Actual constant 是类型安全的，作用域更加明确（括号里的暂时不翻译，我不确定是我理解错了，还是作者写错了），不能在后续的代码中重新 define 也不能 #undef，并且在 debugger 中可用。
 
 ### Branching Model
 
+### 分支策略
+
 Especially when distributing an app to the public (e.g. through the App Store), it's a good idea to isolate releases to their own branch with proper tags. Also, feature work that involves a lot of commits should be done on its own branch. [`git-flow`][gitflow-github] is a tool that helps you follow these conventions. It is simply a convenience wrapper around Git's branching and tagging commands, but can help maintain a proper branching structure especially for teams. Do all development on feature branches (or on `develop` for smaller work), tag releases with the app version, and commit to master only via
+
+App 发布的时候把 release 代码从原有的分支上隔离出来，并且加上适当的 tag，是很好的做法，对于向公众分发（比如通过 App Store）的 app 这一点尤其重要。同时，涉及到大量 commit 的 feature 应该在独立的分支上完成。[`git-flow`][gitflow-github]是一个帮助你遵守这些原则的工具。它只是在 Git 的分支和 tag 命令上简单加了一层包装，就可以帮助维护一套适当的分支结构，对于团队协作尤为有用。所有的开发都应该在 feature 对应的分支上完成（小改动在`develop`分支上），给 release 打上 app 版本的 tag，然后 commit 到 master 分支时只能用下面这条命令：
 
     git flow release finish <version>
 
