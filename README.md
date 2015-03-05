@@ -27,7 +27,7 @@ iOS 开发在上手时可能会有些令人生畏。无论是 Objective-C 还是
 
 ### Xcode
 
-### Xcode
+
 
 [Xcode][xcode] is the IDE of choice for most iOS developers, and the only one officially supported by Apple. There are some alternatives, of which [AppCode][appcode] is arguably the most famous, but unless you're already a seasoned iOS person, go with Xcode. Despite its shortcomings, it's actually quite usable nowadays!
 
@@ -88,29 +88,43 @@ A good first step when putting a project under version control is to have a dece
 
 If you're planning on including external dependencies (e.g. third-party libraries) in your project, [CocoaPods][cocoapods] offers easy and fast integration. Install it like so:
 
+如果你准备在工程里引入外部依赖（例如第三方库），[CocoaPods][cocoapods]提供了快速而便捷的集成方法。安装方法如下：
+
     sudo gem install cocoapods
 
 To get started, move inside your iOS project folder and run
+
+开始的第一步是进入你的工程目录，然后运行
 
     pod init
 
 This creates a Podfile, which will hold all your dependencies in one place. After adding your dependencies to the Podfile, you run
 
+这样会创建一个 Podfile，在这里集中管理所有的依赖。把你的依赖添加到 Profile 里，然后运行
+
     pod install
 
 to install the libraries and include them as part of a workspace which also holds your own project. It is generally [recommended to commit the installed dependencies to your own repo][committing-pods], instead of relying on having each developer running `pod install` after a fresh checkout.
 
+来安装这些库，并且把它们和你自己的工程一起放进一个 workspace 里。在 commit 的时候，一般[推荐把依赖在你的 repo 里安装好之后再 commit][committing-pods]，最好不要让每个开发者 checkout 之后还要自己跑一遍`pod install`。
+
 Note that from now on, you'll need to open the `.xcworkspace` file instead of `.xcproject`, or your code will not compile. The command
+
+要注意，从此以后，打开工程的时候就要打开`.xcworkspace`文件了，不要再打开`.xcproject`，否则代码编译不通过。下面这条命令
 
     pod update
 
 will update all pods to the newest versions permitted by the Podfile. You can use a wealth of [operators][cocoapods-pod-syntax] to specify your exact version requirements.
+
+会把所有的 pod 都更新到 Podfile 允许的最新版本。你可以使用一系列的[符号][cocoapods-pod-syntax]来准确指定你对版本的要求。
 
 [cocoapods]: http://www.cocoapods.org
 [cocoapods-pod-syntax]: http://guides.cocoapods.org/syntax/podfile.html#pod
 [committing-pods]: https://www.dzombak.com/blog/2014/03/including-pods-in-source-control.html
 
 ### Project Structure
+
+### 工程结构
 
 To keep all those hundreds of source files ending up in the same directory, it's a good idea to set up some folder structure depending on your architecture. For instance, you can use the following:
 
