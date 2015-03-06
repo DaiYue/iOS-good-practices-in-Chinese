@@ -195,23 +195,41 @@ App 发布的时候把 release 代码从原有的分支上隔离出来，并且�
 
 ## Common Libraries
 
+## 常用的库
+
 Generally speaking, make it a conscious decision to add an external dependency to your project. Sure, this one neat library solves your problem now, but maybe later gets stuck in maintenance limbo, with the next OS version that breaks everything being just around the corner. Another scenario is that a feature only achievable with external libraries suddenly becomes part of the official APIs. In a well-designed codebase, switching out the implementation is a small effort that pays off quickly. Always consider solving the problem using Apple's extensive (and mostly excellent) frameworks first!
 
+一般来说，在工程里添加外部依赖要谨慎。当然，眼下某个第三方库能漂亮地解决你的问题，但或许不久之后就陷入了维护的泥淖，最后随着下一版 OS 的发布全线崩溃。另一种情况是，原先只能通过引用外部库来实现的 feature，突然官方 API 也支持了。在设计良好的 codebase 里，把第三方库替换为官方的实现花不了多少功夫，但在将来会大有裨益。永远要优先考虑用苹果官方的框架（也是最好的框架）来解决问题！
+
 Therefore this section has been deliberately kept rather short. The libraries featured here tend to reduce boilerplate code (e.g. Auto Layout) or solve complex problems that require extensive testing, such as date calculations. As you become more proficient with iOS, be sure to dive into the source here and there, and acquaint yourself with their underlying Apple frameworks. You'll find that those alone can do a lot of the heavy lifting.
+
+因此，这一章有意写得比较简短。下面介绍的第三方库主要用来减少模板代码（例如 Auto Layout）或者用来解决复杂的、需要大量测试的问题，例如计算日期。随着你对 iOS 越来越精通，务必要四处看看它们的源码，熟悉它们所使用的底层框架。你会发现做好这些就能减轻许多重担了。
 
 ### AFNetworking
 
 A perceived 99.95 percent of iOS developers use this network library. While `NSURLSession` is surprisingly powerful by itself, `AFNetworking` remains unbeaten when it comes to actually managing a queue of requests, which is pretty much a requirement in any modern app.
 
+大约 99.95% 的 iOS 开发者都使用这个网络库。尽管`NSURLSession`已经非常强大了，但一旦涉及到实际管理请求队列时，`AFNetworking`仍然立于不败之地，而现代的 app 基本都会有这个需求。
+
 ### DateTools
+
 As a general rule, [don't write your date calculations yourself][timezones-youtube]. Luckily, in DateTools you get an MIT-licensed, thoroughly tested library that covers pretty much all your calendary needs.
+
+一条常识是，[不要自己写日期计算][timezones-youtube]。幸运的是，有 DateTools 这样一个基于 MIT 协议、充分测试过的第三方库，基本能满足所有日期方面的要求。
 
 [timezones-youtube]: https://www.youtube.com/watch?v=-5wpm-gesOY
 
 ### Auto Layout Libraries
+
+### Auto Layout 相关的库
+
 If you prefer to write your views in code, chances are you've met either of Apple's awkward syntaxes – the regular 'NSLayoutConstraint' factory or the so-called [Visual Format Language][visual-format-language]. The former is extremely verbose and the latter based on strings, which effectively prevents compile-time checking.
 
+如果你习惯用代码写 view，你很可能用过这两种诡异的语法——常规的`NSLayoutConstraint`工厂，以及所谓的[可视化语言][visual-format-language]。前者极其冗长，而后者是基于字符串的，完全躲过了编译检查。
+
 [Masonry][masonry-github] remedies this by introducing its own DSL to make, update and replace constraints. A similar approach for Swift is taken by [Cartography][cartography-github], which builds on the language's powerful operator overloading features. For the more conservative, [FLKAutoLayout][flkautolayout-github] offers a clean, but rather non-magical wrapper around the native APIs.
+
+而 [Masonry][masonry-github] 的解决方法是：引入自己定义的 DSL 来创建、更新和替换约束。Swift 有一个类似的库 [Cartography][cartography-github]，是建立在这门语言强大的运算符重载基础上的。保守一些的库有 [FLKAutoLayout][flkautolayout-github]，它对原生 API 进行了一层整洁而不奇异的包装。
 
 [visual-format-language]: https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3-SW1
 [masonry-github]: https://www.github.com/Masonry/Masonry
