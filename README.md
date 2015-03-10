@@ -229,7 +229,7 @@ If you prefer to write your views in code, chances are you've met either of Appl
 
 [Masonry][masonry-github] remedies this by introducing its own DSL to make, update and replace constraints. A similar approach for Swift is taken by [Cartography][cartography-github], which builds on the language's powerful operator overloading features. For the more conservative, [FLKAutoLayout][flkautolayout-github] offers a clean, but rather non-magical wrapper around the native APIs.
 
-而 [Masonry][masonry-github] 的解决方法是：引入自己定义的 DSL 来创建、更新和替换约束。Swift 有一个类似的库 [Cartography][cartography-github]，是建立在这门语言强大的运算符重载基础上的。保守一些的库有 [FLKAutoLayout][flkautolayout-github]，它对原生 API 进行了一层整洁而不奇异的包装。
+而 [Masonry][masonry-github] 的解决方法是：引入自己定义的 DSL 来创建、更新和替换约束。Swift 有一个类似的库 [Cartography][cartography-github]，是建立在这门语言强大的运算符重载基础上的。保守一些的库有 [FLKAutoLayout][flkautolayout-github]，它对原生 API 加了一层整洁而不奇异的包装。
 
 [visual-format-language]: https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3-SW1
 [masonry-github]: https://www.github.com/Masonry/Masonry
@@ -238,14 +238,21 @@ If you prefer to write your views in code, chances are you've met either of Appl
 
 ## Architecture
 
+## 架构
+
 * [Model-View-Controller-Store (MVCS)][mvcs]
     * This is the default Apple architecture (MVC), extended by a Store layer that vends Model instances and handles the networking, caching etc.
+    * 这是苹果默认的架构(MVC)上增加了一个 Store 层，用来吐出 Model，处理网络请求、缓存等。
     * Every Store exposes to the view controllers either `RACSignal`s or `void`-returning methods with custom completion blocks
+    * 每个 Store 暴露给 view controller 的或者是`RACSignal`，或者是返回值为`void`、参数带有自定义的 completion block 的方法。
 * [Model-View-ViewModel (MVVM)][mvvm]
     * Motivated by "massive view controllers": MVVM considers `UIViewController` subclasses part of the View and keeps them slim by maintaining all state in the ViewModel
+    * MVVM 是为了解决“巨大的 view controller”而生，它把`UIViewController`的子类看做 View 层的一部分，用 ViewModel 维护所有的状态来给 ViewController 瘦身。
     * Quite new concept for Cocoa developers, but [gaining][cocoasamurai-rac] [traction][raywenderlich-mvvm]
+    * 对于 Cocoa 开发者是一个很新的概念，但是[正在引起][cocoasamurai-rac] [越来越多的关注][raywenderlich-mvvm]
 * [View-Interactor-Presenter-Entity-Routing (VIPER)][viper]
     * Rather exotic architecture that might be worth looking into in larger projects, where even MVVM feels too cluttered and testability is a major concern
+    * 相当特别的架构，大型项目可能值得参考，尤其是即使用 MVVM 还是比较凌乱，以及对需要重点考虑可测试性的情况。
 
 [mvcs]: http://programmers.stackexchange.com/questions/184396/mvcs-model-view-controller-store
 [mvvm]: http://www.objc.io/issue-13/mvvm.html
@@ -255,13 +262,22 @@ If you prefer to write your views in code, chances are you've met either of Appl
 
 ### “Event” Patterns
 
+### "通知" 模型
+
 These are the idiomatic ways for components to notify others about things:
 
+以下是组件之间互发通知的一些常见手段：
+
 * __Delegation:__ _(one-to-one)_ Apple uses this a lot (some would say, too much). Use when you want to communicate stuff back e.g. from a modal view.
+* __Delegation:__ _(一对一)_ 苹果官方经常用这个模式（有些人认为用得太泛滥了）。主要用于回传，比如从模态框回传数据。
 * __Callback blocks:__ _(one-to-one)_ Allow for a more loose coupling, while keeping related code sections close to each other. Also scales better than delegation when there are many senders.
+* __Callback blocks:__ _(一对一)_ 耦合更松，同时能让相关联的代码在一起。并且，消息发出者数量很多时比 delegation 更方便。
 * __Notification Center:__ _(one-to-many)_ Possibly the most common way for objects to emit “events” to multiple observers. Very loose coupling — notifications can even be observed globally without reference to the dispatching object.
+* __Notification Center:__ _(一对多)_ 可能是一个对象给多个观察者发出“通知”时最常用的方法。耦合非常松，甚至可以把通知发到全局，不需要对调度者的引用。
 * __Key-Value Observing (KVO):__ _(one-to-many)_ Does not require the observed object to explicitly “emit events” as long as it is _Key-Value Coding (KVC)_ compliant for the observed keys (properties). Usually not recommended due to its implicit nature and the cumbersome standard library API.
+* __Key-Value Observing (KVO):__ _(一对多)_ 不需要被观测的对象主动“发出通知”，只需要被观测的键（属性）支持 _Key-Value Coding (KVC)_ 。这种模式比较含混，而且标准 API 比较繁复，所以一般不推荐使用。
 * __Signals:__ _(one-to-many)_ The centerpiece of [ReactiveCocoa][reactivecocoa-github], they allow chaining and combining to your heart's content, thereby offering a way out of [callback hell][elm-escape-from-callback-hell].
+* __Signals:__ _(一对多)_ 这是[ReactiveCocoa][reactivecocoa-github]的核心，它允许结合关键内容的链式调用，用这种方法逃离[回调深渊（嵌套过多的回调）][elm-escape-from-callback-hell]。
 
 [elm-escape-from-callback-hell]: http://elm-lang.org/learn/Escape-from-Callback-Hell.elm
 
@@ -269,9 +285,13 @@ These are the idiomatic ways for components to notify others about things:
 
 Keep your models immutable, and use them to translate the remote API's semantics and types to your app. Github's [Mantle](https://github.com/Mantle/Mantle) is a good choice.
 
+要确保你的 model 是不可变的，它们用来把远程 API 的语义和类型转换为 app 适用的语义和类型。Github 的 [Mantle](https://github.com/Mantle/Mantle) 是个不错的选择。
+
 ### Views
 
 When laying out your views using Auto Layout, be sure to add the following to your class:
+
+使用 Auto Layout 布局时，要记得在 View 类里加上：
 
     + (BOOL)requiresConstraintBasedLayout
     {
@@ -280,19 +300,25 @@ When laying out your views using Auto Layout, be sure to add the following to yo
 
 Otherwise you may encounter strange bugs when the system doesn't call `-updateConstraints` as you would expect it to.
 
+不然，系统可能不会如期调用`-updateConstraints`，而导致奇怪的 bug。
+
 ### Controllers
 
 Use dependency injection, i.e. pass any required objects in as parameters, instead of keeping all state around in singletons. The latter is okay only if the state _really_ is global.
 
-```objective-c
+要使用依赖注入，也就是说，应该把 Controller 需要的数据用参数传进来，而不要把所有状态信息都保存在单例里。后者仅当这些状态 _的确_ 是全局的情况下才适用。
+
+```
 + [[FooDetailsViewController alloc] initWithFoo:(Foo *)foo];
 ```
 
 ## Networking
+## 网络请求
 
 ### Traditional way: Use custom callback blocks
+### 传统方法：使用自定义回调 block
 
-```objective-c
+```
 // GigStore.h
 
 typedef void (^FetchGigsBlock)(NSArray *gigs, NSError *error);
@@ -314,17 +340,25 @@ typedef void (^FetchGigsBlock)(NSArray *gigs, NSError *error);
 
 This works, but can quickly lead to callback hell if you need to chain multiple requests.
 
+这样虽可行，但是如果要发起几个链式请求，很容易导致回调深渊。
+
 ### Reactive way: Use RAC signals
+
+### Reactive 的方法：使用 RAC signal
 
 If you find yourself in callback hell, have a look at [ReactiveCocoa (RAC)][reactivecocoa-github]. It's a versatile and multi-purpose library that can change the way people write [entire apps][groceryList-github], but you can also use it sparingly where it fits the task.
 
+如果你身陷回调深渊，可以看看[ReactiveCocoa (RAC)][reactivecocoa-github]。这是一个多功能、多用途的库，它可以改变[整个 app ][groceryList-github] 的写法。但你也可以仅在适合用它的时候，零散地用一用。
+
 There are good introductions to the concept of RAC (and FRP in general) on [Teehan+Lax][teehan-lax-rac] and [NSHipster][nshipster-rac].
+
+[Teehan+Lax][teehan-lax-rac]以及[NSHipster][nshipster-rac]很好地介绍了 RAC 概念（以及整个 FRP 的概念）。
 
 [grocerylist-github]: https://github.com/jspahrsummers/GroceryList
 [teehan-lax-rac]: http://www.teehanlax.com/blog/getting-started-with-reactivecocoa/
 [nshipster-rac]: http://nshipster.com/reactivecocoa/
 
-```objective-c
+```
 // GigStore.h
 
 - (RACSignal *)gigsForArtist:(Artist *)artist;
@@ -343,9 +377,13 @@ There are good introductions to the concept of RAC (and FRP in general) on [Teeh
 
 This allows us to transform or filter gigs before showing them, by combining the gig signal with other signals.
 
+在这里我们可以把 gig 信号与其他信号结合，因此可以在展示 gig 之前做一些修改、过滤等处理。
+
 ## Assets
 
 [Asset catalogs][asset-catalogs] are the best way to manage all your project's visual assets. They can hold both universal and device-specific (iPhone 4-inch, iPhone Retina, iPad, etc.) assets and will automatically serve the correct ones for a given name. Teaching your designer(s) how to add and commit things there (Xcode has its own built-in Git client) can save a lot of time that would otherwise be spent copying stuff from emails or other channels to the codebase. It also allows them to instantly try out their changes and iterate if needed.
+
+使用 [Asset catalogs][asset-catalogs] 是管理工程中视觉素材的最好方法。
 
 [asset-catalogs]: https://developer.apple.com/library/ios/recipes/xcode_help-image_catalog-1.0/Recipe.html
 
@@ -395,7 +433,7 @@ It pays off to keep these two as separated as possible, i.e. not perform side ef
 
 [Pragma marks](http://nshipster.com/pragma/) are a great way to group your methods, especially in view controllers. Here is a common structure that works with almost any view controller:
 
-```objective-c
+```
 
 #import "SomeModel.h"
 #import "SomeView.h"
