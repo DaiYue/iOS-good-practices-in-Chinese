@@ -381,17 +381,20 @@ This allows us to transform or filter gigs before showing them, by combining the
 
 ## Assets
 
-[Asset catalogs][asset-catalogs] are the best way to manage all your project's visual assets. They can hold both universal and device-specific (iPhone 4-inch, iPhone Retina, iPad, etc.) assets and will automatically serve the correct ones for a given name. Teaching your designer(s) how to add and commit things there (Xcode has its own built-in Git client) can save a lot of time that would otherwise be spent copying stuff from emails or other channels to the codebase. It also allows them to instantly try out their changes and iterate if needed.
+[Asset catalogs][asset-catalogs] are the best way to manage all your project's visual assets. They can hold both universal and device-specific () assets and will automatically serve the correct ones for a given name. Teaching your designer(s) how to add and commit things there (Xcode has its own built-in Git client) can save a lot of time that would otherwise be spent copying stuff from emails or other channels to the codebase. It also allows them to instantly try out their changes and iterate if needed.
 
-使用 [Asset catalogs][asset-catalogs] 是管理工程中视觉素材的最好方法。
+使用 [Asset catalogs][asset-catalogs] 是管理工程中视觉素材的最好方法。这里既可以添加 iPhone 和 iPad 共用的素材，也可以添加针对特定设备（4寸屏 iPhone，iPhone Retina，iPad 等等）的素材，并且会根据名称来自动提供恰当的素材。教会你的设计师（们）怎么在这里添加并 commit 素材，可以帮你节省许多时间，再也不用把素材从邮件或者别的什么渠道导进代码库里了。同时，这样做也可以让他们即刻看到自己的改动，可以根据需要进行迭代。
 
 [asset-catalogs]: https://developer.apple.com/library/ios/recipes/xcode_help-image_catalog-1.0/Recipe.html
 
 ### Using Bitmap Images
+### 使用位图
 
 Asset catalogs expose only the names of image sets, abstracting away the actual file names within the set. This nicely prevents asset name conflicts, as files such as `button_large@2x.png` are now namespaced inside their image sets. However, some discipline when naming assets can make life easier:
 
-```objective-c
+Asset catalog 只会暴露出一套图片的名字，省略了每张图片实际的文件名。这样，类似`button_large@2x.png`这类文件的命名空间仅限于 asset 内部，很好地避免了 asset 的命名冲突。然而，命名 asset 时遵循一些原则可以让生活更轻松：
+
+```
 IconCheckmarkHighlighted.png // Universal, non-Retina
 IconCheckmarkHighlighted@2x.png // Universal, Retina
 IconCheckmarkHighlighted~iphone.png // iPhone, non-Retina
@@ -403,13 +406,19 @@ IconCheckmarkHighlighted@2x~ipad.png // iPad, Retina
 
 The modifiers `-568h`, `@2x`, `~iphone` and `~ipad` are not required per se, but having them in the file name when dragging the file to an image set will automatically place them in the right "slot", thereby preventing assignment mistakes that can be hard to hunt down.
 
+其中的`-568h`、`@2x`、`~iphone`以及`~ipad`这些标示符本身不是必需的，但是如果在文件名里加上它们，把文件拖动到 asset 时就能自动落到正确的“格子”上，因此能避免难以察觉的错误拖放。
+
 ### Using Vector Images
+### 使用矢量图
 
 You can include the original [vector graphics (PDFs)][vector-assets] produced by designers into the asset catalogs, and have Xcode automatically generate the bitmaps from that. This reduces the complexity of your project (the number of files to manage.)
+
+你可以把设计师设计的原始的[矢量图 (PDFs)][vector-assets]放进 asset catalog，让 Xcode 来自动生成位图。这样能减少工程的复杂度（减少文件个数）。
 
 [vector-assets]: http://martiancraft.com/blog/2014/09/vector-images-xcode6/
 
 ## Coding Style
+## 编码风格
 
 ### Naming
 
