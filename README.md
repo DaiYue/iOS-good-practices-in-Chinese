@@ -421,26 +421,43 @@ You can include the original [vector graphics (PDFs)][vector-assets] produced by
 ## 编码风格
 
 ### Naming
+### 命名
 
 Apple pays great attention to keeping naming consistent, if sometimes a bit verbose, throughout their APIs. When developing for Cocoa, you make it much easier for new people to join the project if you follow [Apple's naming conventions][cocoa-coding-guidelines].
+
+Apple 非常注意在 API 中保持命名一致性，有时候有点过于冗长了。做 Cocoa 开发时要遵循[Apple的命名规范][cocoa-coding-guidelines]，这样能让加入项目的新人轻松许多。
 
 [cocoa-coding-guidelines]: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
 
 Here are some basic takeaways you can start using right away:
 
+以下是几条看了就能用上的基本规则：
+
 A method beginning with a _verb_ indicates that it performs some side effects, but won't return anything:
+
+以 _动词_ 开头的方法表示它执行的操作会造成一些影响，但是不返回任何值。
+
 `- (void)loadView;`
 `- (void)startAnimating;`
 
 Any method starting with a _noun_, however, returns that object and should do so without side effects:
+
+相反的是，以 _名词_ 开头的方法返回一个对象，但不会造成额外的影响。
+
 `- (UINavigationItem *)navigationItem;`
 `+ (UILabel *)labelWithText:(NSString *)text;`
 
 It pays off to keep these two as separated as possible, i.e. not perform side effects when you transform data, and vice versa. That will keep your side effects contained to smaller sections of the code, which makes it more understandable and facilitates debugging.
 
+尽可能地区分这两种方法会有很多好处，也就是说，如果一个方法是处理数据的，就不要让它造成额外的影响，反过来也一样。这样可以让造成影响的代码块保持紧凑，因此可以帮助理解代码，并且有利于 debug。
+
 ### Structure
 
+### 代码结构
+
 [Pragma marks](http://nshipster.com/pragma/) are a great way to group your methods, especially in view controllers. Here is a common structure that works with almost any view controller:
+
+[Pragma marks](http://nshipster.com/pragma/)是给方法分组很好的方法。
 
 ```
 
@@ -498,9 +515,15 @@ static CGFloat const XYZFooFloatConstant = 1234.5;
 
 The most important point is to keep these consistent across your project's classes.
 
+最重要的是要让这些分块标记在工程里所有的类里保持一致。
+
 ### External Style Guides
 
+### 其他风格指南
+
 Futurice does not have company-level guidelines for coding style. It can however be useful to peruse the Objective-C style guides of other development shops, even if some bits can be quite company-specific or opinionated:
+
+Futurice（作者所在的公司）并没有公司范围的编码风格指南。不过，仔细研究一下其他开发社区的 Objective-C 风格指南会非常有用，尽管有些部分可能是只对特定公司有效或者比较主观的。
 
 * [GitHub](https://github.com/github/objective-c-style-guide)
 * [Google](http://google-styleguide.googlecode.com/svn/trunk/objcguide.xml)
@@ -511,9 +534,15 @@ Futurice does not have company-level guidelines for coding style. It can however
 
 ## Diagnostics
 
+## 诊断
+
 ### Compiler warnings
 
+### 编译警告
+
 It is recommended that you enable as many compiler warnings as possible, and treat warnings as errors. This recommendation is justified in [these presentation slides][warnings-slides]. The slides also contain information on how to suppress certain warnings in specific files, or in specific sections of code.
+
+建议你尽量把编译警告都打开，并且像对待 error 一样对待 warning。
 
 In short, add at least these values to the _“Other Warning Flags”_ build setting:
 
