@@ -542,37 +542,67 @@ Futurice（作者所在的公司）并没有公司范围的编码风格指南。
 
 It is recommended that you enable as many compiler warnings as possible, and treat warnings as errors. This recommendation is justified in [these presentation slides][warnings-slides]. The slides also contain information on how to suppress certain warnings in specific files, or in specific sections of code.
 
-建议你尽量把编译警告都打开，并且像对待 error 一样对待 warning。
+建议你尽量把编译警告都打开，并且像对待 error 一样对待 warning。[这份幻灯片][warnings-slides] 论证了这一点。幻灯片里同时还讲了如何在特定文件里或者特定的代码段里忽略特定的 warning。
 
 In short, add at least these values to the _“Other Warning Flags”_ build setting:
 
-- `-Wall` _(Enables lots of additional warnings)_
-- `-Wextra` _(Enables more additional warnings)_
+一句话，在 build setting 的 _“Other Warning Flags”_ 里至少要加入以下两个值：
+
+- `-Wall` _（开启非常多额外的 warning）_
+- `-Wextra` _（开启许多额外的 warning）_
 
 Also enable the _“Treat warnings as errors”_ build setting.
+
+同时打开 build setting 里的 _“Treat warnings as errors”_ 。
 
 [warnings-slides]: https://speakerdeck.com/hasseg/the-compiler-is-your-friend
 
 ### Clang Static Analyzer
 
+### Clang 静态分析器
+
 The Clang compiler (which Xcode uses) has a _static analyzer_ that performs control and data flow analysis on your code and checks for lots of errors that the compiler cannot.
+
+Clang 编译器（也就是 XCode 使用的编译器）有一个 _静态分析器(static analyer)_ ，用来执行代码控制流和数据流的分析，可以发现许多编译器检查不出的问题。
 
 You can manually run the analyzer from the _Product → Analyze_ menu item in Xcode.
 
+你可以在 Xcode 的 _Product → Analyze_ 里手动运行分析器。
+
 The analyzer can work in either “shallow” or “deep” mode. The latter is much slower but may find more issues due to cross-function control and data flow analysis.
+
+分析器可以运行“shallow”和“deep”两种模式。后者要慢得多，但是有跨方法的控制流分析以及数据流分析，因此能发现更多问题。
 
 Recommendations:
 
+建议：
+
 - Enable _all_ of the checks in the analyzer (by enabling all of the options in the “Static Analyzer” build setting sections)
-- Enable the _“Analyze during ‘Build’”_ build setting for your release build configuration to have the analyzer run automatically during release builds. (Seriously, do this — you’re not going to remember to run it manually.)
+
+- 开启分析器的 _全部_ 检查（方法是在 build setting 的“Static Analyzer”部分开启所有选项）
+
+- Enable the _“Analyze during ‘Build’”_ build setting for your release build  configuration to have the analyzer run automatically during release builds. (Seriously, do this — you’re not going to remember to run it manually.)
+
+- 在 build setting 里，对 release 的 build 配置开启 _“Analyze during ‘Build’”_ 。（真的，一定要这样做——你不会记得手动跑分析器的。）
+
 - Set the _“Mode of Analysis for ‘Analyze’”_ build setting to _Shallow (faster)_
+
+- 把 build setting 里的 _“Mode of Analysis for ‘Analyze’”_ 设为 _Shallow (faster)_
+
 - Set the _“Mode of Analysis for ‘Build’”_ build setting to _Deep_
+
+- 把 build setting 里的 _“Mode of Analysis for ‘Build’”_ 设为 _Deep_
+
 
 ### [Faux Pas](http://fauxpasapp.com/)
 
 Created by our very own [Ali Rantakari][ali-rantakari-twitter], Faux Pas is a fabulous static error detection tool. It analyzes your codebase and finds issues you had no idea even existed. Be sure to run this before shipping any iOS (or Mac) app!
 
+由我们的员工 [Ali Rantakari][ali-rantakari-twitter] 创作的 Faux Pas 是一个出色的静态 error 检测工具。它能分析你的代码库，找出你全然不知的错误。在发布任何 iOS（或 Mac）app 之前务必要运行它一次！
+
 _(Note: all Futurice employees get a free license to this — just ask Ali.)_
+
+_(注意：所有 Futurice 的员工都能得到一份免费的许可——只要问 Ali 要就行了。)_
 
 [ali-rantakari-twitter]: https://twitter.com/AliRantakari
 
