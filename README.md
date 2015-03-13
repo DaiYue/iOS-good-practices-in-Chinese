@@ -610,17 +610,26 @@ _(注意：所有 Futurice 的员工都能得到一份免费的许可——只�
 
 When your app crashes, Xcode does not break into the debugger by default. To achieve this, add an exception breakpoint (click the "+" at the bottom of Xcode's Debug Navigator) to halt execution whenever an exception is raised. In many cases, you will then see the line of code responsible for the exception. This catches any exception, even handled ones. If Xcode keeps breaking on benign exceptions in third party libraries e.g., you might be able to mitigate this by choosing _Edit Breakpoint_ and setting the _Exception_ drop-down to _Objective-C_. 
 
+当 app crash 的时候，默认情况下 Xcode 并不会进入 debugger。要想进入 debugger，添加一个 Exception Breakpoint（点击 Xcode 的 Debug Navigator 底部的“+”号），遇到 exception 的时候就会暂停执行。在大部分情况下，你都能看到导致 exception 的那行代码。这种方法会捕捉到任何 exception，包括已经做了处理的 exception。如果 Xcode 常常会停在正常的 exception（比如第三方库里的）上，选择 _Edit Breakpoint_ 然后在 _Exception_ 下拉框选择 _Objective-C_ 可以减轻这种情况。
+
 For view debugging, [Reveal][reveal] and [Spark Inspector][spark-inspector] are two powerful visual inspectors that can save you hours of time, especially if you're using Auto Layout and want to locate views that are collapsed or off-screen. Granted, Xcode offers [something very similar][xcode-view-debugging] for free, but it's iOS 8+ only and feels somewhat less polished.
+
+在 view 的 debug 方面，[Reveal][reveal] 和 [Spark Inspector][spark-inspector] 是两个强大的可视化检查器，可以节约你大量的时间，尤其是用 Auto Layout 时想知道消失的视图去哪儿了的情况。Xcode 也免费提供了[一个类似的东西][xcode-view-debugging]，不过只支持 iOS 8+，并且略有些不够完善。
 
 [reveal]: http://revealapp.com/
 [spark-inspector]: http://sparkinspector.com
 [xcode-view-debugging]: https://developer.apple.com/library/ios/recipes/xcode_help-debugger/using_view_debugger/using_view_debugger.html
 
 ### Profiling
+### 评估
 
 Xcode comes with a profiling suite called Instruments. It contains a myriad of tools for profiling memory usage, CPU, network communications, graphics and much more. It's a complex beast, but one of its more straight-forward use cases is tracking down memory leaks with the Allocations instrument. Simply choose _Product_ > _Profile_ in Xcode, select the Allocations instrument, hit the Record button and filter the Allocation Summary on some useful string, like the prefix of your own app's class names. The count in the Persistent column then tells you how many instances of each object you have. Any class for which the instance count increases indiscriminately indicates a memory leak.
 
+Xcode 自带一套评估工具，叫做 Instruments。它包含众多的评估内存使用、CPU、网络连接、图像等方面的工具。它本身是个庞然大物，但一个比较简单直接的用途是用 Allocations instrument 来检测内存泄露。只需在 Xcode 中选择 _Product_ > _Profile_ ，选择 Allocations instrument，点击 Record 按钮，然后从 Allocation Summary 中过滤出一些有用的字符串，比如 app 里你自己写的类的类名前缀。在 Persistant 一栏中的计数显示了每个对象有多少个实例。如果某个类的实例个数一直胡乱增长，就说明有内存泄露。
+
 Also good to know is that Instruments has an Automation tool for recording and playing back UI interactions as JavaScript files. [UI Auto Monkey][ui-auto-monkey] is a script that will use Automation to randomly pummel your app with taps, swipes and rotations which can be useful for stress/soak testing.
+
+另外值得注意的是 Instrument 有一个 Automation 工具，用来把 UI 交互录制为 JavaScript 文件并且重放。[UI Auto Monkey][ui-auto-monkey] 是一个脚本，它借助 Automation 在你的 app 上随机点击、清扫、旋转，对压力测试/浸泡测试可能会有帮助。
 
 [ui-auto-monkey]: https://github.com/jonathanpenn/ui-auto-monkey
 
