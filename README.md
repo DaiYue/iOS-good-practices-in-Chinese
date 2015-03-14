@@ -768,38 +768,73 @@ For most environments the language is not needed, as the app will probably be in
 
 Deploying software on iOS devices isn't exactly straightforward. That being said, here are some central concepts that, once understood, will help you tremendously with it.
 
+把应用安装到 iOS 设备上可算不上简单直接。尽管如此，在这里会介绍几个核心概念；理解这些概念，会对你的部署有很大的帮助。
+
 ### Signing
+
+### 签名
 
 Whenever you want to run software on an actual device (as opposed to the simulator), you will need to sign your build with a __certificate__ issued by Apple. Each certificate is linked to a private/public keypair, the private half of which resides in your Mac's Keychain. There are two types of certificates:
 
+只要你想把应用跑在真实的设备上（相对于模拟器而言），你就需要在编译时用一个苹果颁发的 _证书_ 来签名。每个证书对应一对公钥/私钥，私钥保存在你的 Mac 的钥匙串中。证书有两种：
+
 * __Development certificate:__ Every developer on a team has their own, and it is generated upon request. Xcode might do this for you, but it's better not to press the magic "Fix issue" button and understand what is actually going on. This certificate is needed to deploy development builds to devices.
+
+* __开发证书：__ 团队里的每个开发者都可以有自己的开发证书，是通过请求获得的。Xcode 可以自动完成这项工作，不过最好还是不要点击那个神奇的“Fix issue”按钮，而是自己做一遍来理解这个过程到底做了什么。要把开发环境打的包安装到设备上就需要开发证书。
+
 * __Distribution certificate:__ There can be several, but it's best to keep it to one per organization, and share its associated key through some internal channel. This certificate is needed to ship to the App Store, or your organization's internal "enterprise app store".
+
+* __分发证书：__ 可以有多个，不过最好还是限制为每个组织一个，然后通过内部渠道分享它相关联的密钥。要发布到 App Store 或者企业的内部“app store”，就需要这个证书。
+
 
 ### Provisioning
 
 Besides certificates, there are also __provisioning profiles__, which are basically the missing link between devices and certificates. Again, there are two types to distinguish between development and distribution purposes:
 
+除了证书之外，还有 __provisioning profiles__ ，它就是关联证书和设备的一环。它同样有两种，分别用于开发和分发这两种不同目的：
+
 * __Development provisioning profile:__ It contains a list of all devices that are authorized to install and run the software. It is also linked to one or more development certificates, one for each developer that is allowed to use the profile. The profile can be tied to a specific app, but for most development purposes it's perfectly fine to use the wildcard profile, whose App ID ends in an asterisk (*).
 
+* __Development provisioning profile:__ 它包括被授权安装、运行 app 的设备列表。同时它与一个或多个开发证书相关联，每个开发证书对应一个可以使用这个 profile 的开发者。这种 profile 可以与特定 app 绑定，但是对于开发的用途，大部分用通配的 profile 即可，App ID 以星号（*）结尾。
+
 * __Distribution provisioning profile:__ There are three different ways of distribution, each for a different use case. Each distribution profile is linked to a distribution certificate, and will be invalid when the certificate expires.
+
+* __Distribution provisioning profile:__ 有 3 种分发的途径，每种都有一种不同的使用情景。每个 distribution profile 与一个分发证书相关联，证书过期即失效。
+
     * __Ad-Hoc:__ Just like development profiles, it contains a whitelist of devices the app can be installed to. This type of profile can be used for beta testing on 100 devices per year. For a smoother experience and up to 1000 distinct users, you can use Apple's newly acquired [TestFlight][testflight] service. Supertop offers a good [summary of its advantages and issues][testflight-discussion].
+    
+    * __Ad-Hoc:__ 与开发证书相同，它包含可以安装 app 的设备白名单。这种 profile 可以用来在每年最多 100 个设备上做 beta 测试。想要更为顺畅的体验，增加至 1000 个不同的用户，你可以使用苹果新推出的[TestFlight][testflight]服务。Supertop 上对它的优势和问题有[一个很好的总结][testflight-discussion]。
+    
     * __App Store:__ This profile has no list of allowed devices, as anyone can install it through Apple's official distribution channel. This profile is required for all App Store releases.
+    
+    * __App Store:__ 这种 profile 没有设备列表，因为任何人都可以通过苹果的官方分发渠道安装 app。发布到 App Store 会需要这种 profile。
+    
     * __Enterprise:__ Just like App Store, there is no device whitelist, and the app can be installed by anyone with access to the enterprise's internal "app store", which can be just a website with links. This profile is available only on Enterprise accounts.
+    
+    * __Enterprise:__ 如同 App Store 类型一样，没有设备白名单，任何人都可以通过企业的内部“app store”来安装 app。
 
 [testflight]: https://developer.apple.com/testflight/
 [testflight-discussion]: http://blog.supertop.co/post/108759935377/app-developer-friends-try-testflight
 
 To sync all certificates and profiles to your machine, go to Accounts in Xcode's Preferences, add your Apple ID if needed, and double-click your team name. There is a refresh button at the bottom, but sometimes you just need to restart Xcode to make everything show up.
 
+要把所有的证书和 profile 同步到你的机器上，到 Xcode 的 Preferences 里的 Accounts，在这里添加你的 Apple ID，然后双击 team 名称。底部有一个刷新按钮，但有时需要重启 Xcode 才能正常刷新。
+
 #### Debugging Provisioning
 
 Sometimes you need to debug a provisioning issue. For instance, Xcode may refuse to install the build to an attached device, because the latter is not on the (development or ad-hoc) profile's device list. In those cases, you can use Craig Hockenberry's excellent [Provisioning][provisioning] plugin by browsing to `~/Library/MobileDevice/Provisioning Profiles`, selecting a `.mobileprovision` file and hitting Space to launch Finder's Quick Look feature. It will show you a wealth of information such as devices, entitlements, certificates, and the App ID.
+
+有时候你需要 debug 一个 provisioning 问题。例如，Xcode 可能拒绝把包安装到设备上，因为设备不在（development 或 ad-hoc 的）profile 的设备列表上。在这种情况下，你可以使用 Craig Hockenberry 优秀的[Provisioning][provisioning]插件，定位到`~/Library/MobileDevice/Provisioning Profiles`，选择`.mobileprovision`文件然后按空格键，启动 Finder 的快速搜索功能。它会展示出非常丰富的信息，包括设备、授权、证书 和 App ID 等。
 
 [provisioning]: https://github.com/chockenberry/Provisioning
 
 ### Uploading
 
+### 上传
+
 [iTunes Connect][itunes-connect] is Apple's portal for managing your apps on the App Store. To upload a build, Xcode 6 requires an Apple ID that is part of the developer account used for signing. This can make things tricky when you are part of several developer accounts and want to upload their apps, as for mysterious reasons _any given Apple ID can only be associated with a single iTunes Connect account_. One workaround is to create a new Apple ID for each iTunes Connect account you need to be part of, and use Application Loader instead of Xcode to upload the builds. That effectively decouples the building and signing process from the upload of the resulting `.app` file.
+
+
 
 After uploading the build, be patient as it can take up to an hour for it to show up under the Builds section of your app version. When it appears, you can link it to the app version and submit your app for review.
 
