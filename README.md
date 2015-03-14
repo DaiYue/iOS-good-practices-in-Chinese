@@ -834,25 +834,40 @@ Sometimes you need to debug a provisioning issue. For instance, Xcode may refuse
 
 [iTunes Connect][itunes-connect] is Apple's portal for managing your apps on the App Store. To upload a build, Xcode 6 requires an Apple ID that is part of the developer account used for signing. This can make things tricky when you are part of several developer accounts and want to upload their apps, as for mysterious reasons _any given Apple ID can only be associated with a single iTunes Connect account_. One workaround is to create a new Apple ID for each iTunes Connect account you need to be part of, and use Application Loader instead of Xcode to upload the builds. That effectively decouples the building and signing process from the upload of the resulting `.app` file.
 
-
+[iTunes Connect][itunes-connect] 是苹果 App Store 上 app 的管理平台。要上传一个包，Xcode 6 需要用一个开发者账号的 Apple ID 来签名。这里如果你有多个开发者账号，想要分别上传他们的 app，可能遇到一些麻烦，因为不知为何 _一个特定的 Apple ID 只能与一个 iTunes Connect 账号相关联_ 。一个替代方法是，为每个 iTunes Connect 账号都创建一个新的 Apple ID，然后使用 Application Loader 代替 Xcode 来上传包。这样就把打包签名与上传 `.app` 文件的过程解耦了。
 
 After uploading the build, be patient as it can take up to an hour for it to show up under the Builds section of your app version. When it appears, you can link it to the app version and submit your app for review.
+
+上传包之后，保持耐心，可能一个小时后这个版本的 app 才会出现在 Builds 一栏。当它出现以后，你可以把它与 app 的版本信息链接起来，然后提交审核。
 
 [itunes-connect]: https://itunesconnect.apple.com
 
 ## In-App Purchases (IAP)
 
+## App内购买（IAP）
+
 When validating in-app purchase receipts, remember to perform the following checks:
 
+验证 app 内购买的收据时，请记得进行以下检查：
+
 - __Authenticity:__ That the receipt comes from Apple
+- __真伪性:__ 购买收据确实来自苹果；
 - __Integrity:__ That the receipt has not been tampered with
+- __完整性:__ 收据没有被篡改；
 - __App match:__ That the app bundle ID in the receipt matches your app’s bundle identifier
+- __应用匹配:__ 收据里的 bundle ID 符合你的 app 的 bundle ID；
 - __Product match:__ That the product ID in the receipt matches your expected product identifier
+- __产品匹配：__ 收据里的 product ID 符合你预期的 product ID；
 - __Freshness:__ That you haven’t seen the same receipt ID before.
+- __最新性:__ 你之前没有见过相同的收据 ID
 
 Whenever possible, design your IAP system to store the content for sale server-side, and provide it to the client only in exchange for a valid receipt that passes all of the above checks. This kind of a design thwarts common piracy mechanisms, and — since the validation is performed on the server — allows you to use Apple’s HTTP receipt validation service instead of interpreting the receipt `PKCS #7` / `ASN.1` format yourself.
 
+设计你的 IAP 系统时，尽量把售卖的内容存储在 server 端，然后仅当收到有效的、通过以上所有检查的收据后，才把内容提供给 client 端。这样的设计阻碍了常规的盗版机制，并且——既然验证是在 server 端进行的——你可以利用苹果的 HTTP 收据验证服务，而不是自己解析收据的 `PKCS #7` / `ASN.1` 格式。
+
 For more information on this topic, check out the [Futurice blog: Validating in-app purchases in your iOS app][futu-blog-iap].
+
+关于这个话题的更多信息，可以参考[Futurice blog: 在你的 iOS app 里验证 app 内购买][futu-blog-iap]。
 
 [futu-blog-iap]: http://futurice.com/blog/validating-in-app-purchases-in-your-ios-app
 
