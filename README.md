@@ -690,7 +690,7 @@ Once you have this set up, ensure that you _save the Xcode archive (`.xcarchive`
 
 ### Build Configurations
 
-### 构建配置
+### 编译配置
 
 Even simple apps can be built in different ways. The most basic separation that Xcode gives you is that between _debug_ and _release_ builds. For the latter, there is a lot more optimization going on at compile time, at the expense of debugging possibilities. Apple suggests that you use the _debug_ build configuration for development, and create your App Store packages using the _release_ build configuration. This is codified in the default scheme (the dropdown next to the Play and Stop buttons in Xcode), which commands that _debug_ be used for Run and _release_ for Archive.
 
@@ -698,21 +698,41 @@ Even simple apps can be built in different ways. The most basic separation that 
 
 However, this is a bit too simple for real-world applications. You might – no, [_should!_][futurice-environments] – have different environments for testing, staging and other activities related to your service. Each might have its own base URL, log level, bundle identifier (so you can install them side-by-side), provisioning profile and so on. Therefore a simple debug/release distinction won't cut it. You can add more build configurations on the "Info" tab of your project settings in Xcode.
 
-
+不过，对于真实的应用，这样还是过于简单了。你可以——不，是[_应该_][futurice-environments]有几套不同的环境，分别用于测试、更新和其他与服务相关的操作。每套环境都可以有自己的 base URL，log 级别，bundle identifier（这样就可以同时安装），provision profile 等。因此，简单的 debug/release 不能满足要求。你可以在 Xcode 工程设置的“Info”一栏里添加更多的编译配置。
 
 [futurice-environments]: https://blog.futurice.com/five-environments-you-cannot-develop-without
 
 #### `xcconfig` files for build settings
 
+#### 编译配置的`xcconfig`文件
+
 Typically build settings are specified in the Xcode GUI, but you can also use _configuration settings files_ (“`.xcconfig` files”) for them. The benefits of using these are:
 
+编译配置一般是在 Xcode 的界面里设置的，不过你也可以使用 _配置文件_ （“`.xcconfig` 文件”）来设置。这样做的好处是：
+
 - You can add comments to explain things
+
+- 你可以添加注释来进行解释；
+
 - You can `#include` other build settings files, which helps you avoid repeating yourself:
+
+- 你可以 `#include` 其他编译配置文件，帮助避免重复：
+
     - If you have some settings that apply to all build configurations, add a `Common.xcconfig` and `#include` it in all the other files
+    
+    - 如果你有一些所有配置通用的设置，添加一个 `Common.xcconfig` 文件，然后把它 `#include` 到其他文件里；
+    
     - If you e.g. want to have a “Debug” build configuration that enables compiler optimizations, you can just `#include "MyApp_Debug.xcconfig"` and override one of the settings
+    
+    - 比如说你想要加一个在“Debug”基础上开启编译优化的配置，只需 `#include "MyApp_Debug.xcconfig"`，然后覆盖相应的设置
+    
 - Conflict resolution and merging becomes easier
 
+- 合并和解决冲突更简单一些。
+
 Find more information about this topic in [these presentation slides][xcconfig-slides].
+
+更多关于本话题的信息，可以参考[这些幻灯片][xcconfig-slides]。
 
 [xcconfig-slides]: https://speakerdeck.com/hasseg/xcode-configuration-files
 
@@ -720,11 +740,17 @@ Find more information about this topic in [these presentation slides][xcconfig-s
 
 A target resides conceptually below the project level, i.e. a project can have several targets that may override its project settings. Roughly, each target corresponds to "an app" within the context of your codebase. For instance, you could have country-specific apps (built from the same codebase) for different countries' App Stores. Each of these will need development/staging/release builds, so it's better to handle those through build configurations, not targets. It's not uncommon at all for an app to only have a single target.
 
+Target 的概念比 project 低一个级别，也就是说，一个 project 可以有数个 target，这些 target 的设置可以覆盖 project 的设置。粗略地说，每个 target 对应代码库里的“一个 app”。举个例子，你可能针对不同国家的 App Store 有不同的 app（都是从同一个代码库编译出来的）。每个 app 都需要开发/更新/release 的编译配置，因此用编译配置来处理会比 target 更好一些。一个 app 只有一个 target 完全不足为奇。
+
 ### Schemes
 
 Schemes tell Xcode what should happen when you hit the Run, Test, Profile, Analyze or Archive action. Basically, they map each of these actions to a target and a build configuration. You can also pass launch arguments, such as the language the app should run in (handy for testing your localizations!) or set some diagnostic flags for debugging.
 
+Scheme 告诉 Xcode 在 Run、Test、Profile、Analyze 和 Archive 时分别应该干什么。基本上，以上每个操作的 scheme 对应一个 target 和一套编译配置。你也可以传递启动参数，比如 app 运行的语言（对于测试本地化很方便！）或者设置一些 debug 用的诊断 flag。
+
 A suggested naming convention for schemes is `MyApp (<Language>) [Environment]`:
+
+Scheme 的推荐命名方式是 `MyApp (<Language>) [Environment]`：
 
     MyApp (English) [Development]
     MyApp (German) [Development]
@@ -734,7 +760,11 @@ A suggested naming convention for schemes is `MyApp (<Language>) [Environment]`:
 
 For most environments the language is not needed, as the app will probably be installed through other means than Xcode, e.g. TestFlight, and the launch argument thus be ignored anyway. In that case, the device language should be set manually to test localization.
 
+对于大部分环境其中的语言是不需要的，因为 app 有可能通过 Xcode 之外的途径安装，比如 TestFlight，这样启动参数就会被忽略。这种情况下，只能手动设置设备语言来测试本地化。
+
 ## Deployment
+
+## 部署
 
 Deploying software on iOS devices isn't exactly straightforward. That being said, here are some central concepts that, once understood, will help you tremendously with it.
 
