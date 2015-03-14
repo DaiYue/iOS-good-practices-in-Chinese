@@ -634,14 +634,19 @@ Also good to know is that Instruments has an Automation tool for recording and p
 [ui-auto-monkey]: https://github.com/jonathanpenn/ui-auto-monkey
 
 ## Analytics
+## 统计
 
 Including some analytics framework in your app is strongly recommended, as it allows you to gain insights on how people actually use it. Does feature X add value? Is button Y too hard to find? To answer these, you can send events, timings and other measurable information to a service that aggregates and visualizes them – for instance, [Google Tag Manager][google-tag-manager]. The latter is more versatile than Google Analytics in that it inserts a data layer between app and Analytics, so that the data logic can be modified through a web service without having to update the app.
+
+强烈推荐在你的 app 里加上一个统计框架，它能帮助你看到用户实际上是怎么用你的 app 的。X 功能有价值吗？按钮 Y 太难找到了吗？要回答这些问题，可以把点击事件、计时以及其他可测的信息发送到一个能收集并可视化这些信息的服务，比如[Google Tag Manager][google-tag-manager]。Google Tag Manager 比 Google Analytics 更灵活一些，它在 app 和 Analytics 之间插了一个数据层，因此不须更新 app 就可以通过 web service 更改数据逻辑。
 
 [google-tag-manager]: http://www.google.com/tagmanager/
 
 A good practice is to create a slim helper class, e.g. `XYZAnalyticsHelper`, that handles the translation from app-internal models and data formats (XYZModel, NSTimeInterval, …) to the mostly string-based data layer:
 
-```objective-c
+一种很好的做法是加一个轻量的辅助 class，比如 `XYZAnalyticsHelper`，用来把 app 内部的 model 和数据格式（XYZModel，NSTimeInterval 等）翻译成以字符串为主的数据层。 
+
+```
 
 - (void)pushAddItemEventWithItem:(XYZItem *)item editMode:(XYZEditMode)editMode
 {
@@ -658,9 +663,15 @@ A good practice is to create a slim helper class, e.g. `XYZAnalyticsHelper`, tha
 
 This has the additional advantage of allowing you to swap out the entire Analytics framework behind the scenes if needed, without the rest of the app noticing.
 
+这样有一个额外的好处，就是可以在需要时清除掉整个统计框架，而 app 其余的部分不会受任何影响。
+
 ### Crash Logs
 
+### 崩溃日志
+
 First you should make your app send crash logs onto a server somewhere so that you can access them. You can implement this manually (using [PLCrashReporter][plcrashreporter] and your own backend) but it’s recommended that you use an existing service instead — for example one of the following:
+
+首先应该让 app 把崩溃日志发送到某个服务器上，这样你才能看得到。可以自己实现这个功能（用[PLCrashReporter][plcrashreporter]结合自己的后台），但推荐使用已有的服务，比如下面这些：
 
 * [Crashlytics](http://www.crashlytics.com)
 * [HockeyApp](http://hockeyapp.net)
@@ -671,14 +682,23 @@ First you should make your app send crash logs onto a server somewhere so that y
 
 Once you have this set up, ensure that you _save the Xcode archive (`.xcarchive`)_ of every build you release. The archive contains the built app binary and the debug symbols (`dSYM`) which you will need to symbolicate crash reports from that particular version of your app.
 
+设置好这些之后，要确保每次发布都要 _保存 Xcode archive (`.xcarchive`)_ 。Archive 里包含编译出的二进制文件以及 debug symbol（`dSYM`），你需要这些数据来解析这个版本 app 的崩溃报告。
+
 
 ## Building
+## 编译构建
 
 ### Build Configurations
 
+### 构建配置
+
 Even simple apps can be built in different ways. The most basic separation that Xcode gives you is that between _debug_ and _release_ builds. For the latter, there is a lot more optimization going on at compile time, at the expense of debugging possibilities. Apple suggests that you use the _debug_ build configuration for development, and create your App Store packages using the _release_ build configuration. This is codified in the default scheme (the dropdown next to the Play and Stop buttons in Xcode), which commands that _debug_ be used for Run and _release_ for Archive.
 
+即使最简单的 app 也有不同的构建方式。Xcode 提供的最基本的区别是 _debug_ 和 _release_ 模式。后者的编译时优化要强很多，代价是损失了 debug 的可能性。苹果建议你开发时使用 _debug_ 模式，提交到 App Store 的包用 _release_ 模式编译。默认的模式（在 Xcode 里的运行/停止按钮旁边的下拉菜单可以更改）就是这么设置的，Run 用 _debug_ ，Archive 用 _release_ 。
+
 However, this is a bit too simple for real-world applications. You might – no, [_should!_][futurice-environments] – have different environments for testing, staging and other activities related to your service. Each might have its own base URL, log level, bundle identifier (so you can install them side-by-side), provisioning profile and so on. Therefore a simple debug/release distinction won't cut it. You can add more build configurations on the "Info" tab of your project settings in Xcode.
+
+
 
 [futurice-environments]: https://blog.futurice.com/five-environments-you-cannot-develop-without
 
@@ -770,14 +790,5 @@ Whenever possible, design your IAP system to store the content for sale server-s
 For more information on this topic, check out the [Futurice blog: Validating in-app purchases in your iOS app][futu-blog-iap].
 
 [futu-blog-iap]: http://futurice.com/blog/validating-in-app-purchases-in-your-ios-app
-
-
-## More Ideas
-
-- 3x assets, iPhone 6 screen sizes explained
-- Add list of suggested compiler warnings
-- Ask IT about automated Jenkins build machine
-- Add section on Testing
-- Add "proven don'ts"
 
 [reactivecocoa-github]: https://github.com/ReactiveCocoa/ReactiveCocoa
