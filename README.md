@@ -168,18 +168,18 @@ Find more information about localization in [these presentation slides][l10n-sli
 
 Keep app-wide constants in a `Constants.h` file that is included in the prefix header.
 
-把整个 app 范围的常量定义在一个`Constants.h`文件里，然后在 prefix header 里 include 这个文件。
+把整个 app 范围的常量定义在一个`Constants.h`文件里，然后在 prefix header 里加入这个文件。
 
 Instead of preprocessor macro definitions (via `#define`), use actual constants:
 
-不要再用 `#define` 这类预处理宏定义了，改成用 actual constant：
+相比使用 `#define` 定义的预处理宏，使用真正的常量更好：
 
     static CGFloat const XYZBrandingFontSizeSmall = 12.0f;
     static NSString * const XYZAwesomenessDeliveredNotificationName = @"foo";
 
 Actual constants are type-safe, have more explicit scope (they’re not available in all imported/included files until undefined), cannot be redefined or undefined in later parts of the code, and are available in the debugger.
 
-Actual constant 是类型安全的，作用域更加明确（括号里的暂时不翻译，我不确定是我理解错了，还是作者写错了），不能在后续的代码中重新 define 也不能 #undef，并且在 debugger 中可用。
+真正的常量是类型安全的，拥有更明确的作用域，不能在后续的代码中重新定义也不能取消定义，并且在 debugger 中可用。
 
 ### Branching Model
 
@@ -199,7 +199,7 @@ App 发布的时候把 release 代码从原有的分支上隔离出来，并且�
 
 Generally speaking, make it a conscious decision to add an external dependency to your project. Sure, this one neat library solves your problem now, but maybe later gets stuck in maintenance limbo, with the next OS version that breaks everything being just around the corner. Another scenario is that a feature only achievable with external libraries suddenly becomes part of the official APIs. In a well-designed codebase, switching out the implementation is a small effort that pays off quickly. Always consider solving the problem using Apple's extensive (and mostly excellent) frameworks first!
 
-一般来说，在工程里添加外部依赖要谨慎。当然，眼下某个第三方库能漂亮地解决你的问题，但或许不久之后就陷入了维护的泥淖，最后随着下一版 OS 的发布全线崩溃。另一种情况是，原先只能通过引用外部库来实现的 feature，突然官方 API 也支持了。在设计良好的 codebase 里，把第三方库替换为官方的实现花不了多少功夫，但在将来会大有裨益。永远要优先考虑用苹果官方的框架（也是最好的框架）来解决问题！
+一般来说，在工程里添加外部依赖要谨慎。当然，眼下某个第三方库能漂亮地解决你的问题，但或许不久之后就陷入了维护的泥淖，最后随着下一版 OS 的发布全线崩溃。另一种情况是，原先只能通过引用外部库来实现的 feature，突然官方 API 也支持了。在设计良好的项目里，把第三方库替换为官方的实现花不了多少功夫，但在将来会大有裨益。永远要优先考虑用苹果官方的框架（也是最好的框架）来解决问题！
 
 Therefore this section has been deliberately kept rather short. The libraries featured here tend to reduce boilerplate code (e.g. Auto Layout) or solve complex problems that require extensive testing, such as date calculations. As you become more proficient with iOS, be sure to dive into the source here and there, and acquaint yourself with their underlying Apple frameworks. You'll find that those alone can do a lot of the heavy lifting.
 
@@ -457,7 +457,7 @@ It pays off to keep these two as separated as possible, i.e. not perform side ef
 
 [Pragma marks](http://nshipster.com/pragma/) are a great way to group your methods, especially in view controllers. Here is a common structure that works with almost any view controller:
 
-[Pragma marks](http://nshipster.com/pragma/)是给方法分组很好的方法。
+[Pragma marks](http://nshipster.com/pragma/)是给方法分组很好的方法，特别是在 view controller 中。下面是一个在 view controller 中常见的结构：
 
 ```
 
