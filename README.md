@@ -46,14 +46,8 @@ iOS 开发在上手时可能会有些令人生畏。无论是 Objective-C 还是
 #### 用 Storyboard 画界面有哪些好处？
 * 对技术不太熟悉的人也可以画 Storyboard，调整颜色、layout 约束，为项目做出直接贡献。不过，要做这些需要工程已经建好，并且也要了解一些基本知识。
 * 开发迭代会更快，因为不需要 build 工程就能预览到做出的改动。
-* 在 Xcode 6 中，在 Storyboard 里终于能看到自定义的字体和 UI 控件样式了。这让你在设计时能更好地了解界面的最终外观。
-* 从 iOS 8 开始，你可以用 Size Classes 来设计同时支持各种屏幕尺寸的界面，省去了很多重复工作。
-***
-* For the less technically inclined, Storyboards can be a great way to contribute to the project directly, e.g. by tweaking colors or layout constraints. However, this requires a working project setup and some time to learn the basics.
-* Iteration is often faster since you can preview certain changes without building the project.
-
- * In Xcode 6, custom fonts and UI elements are finally represented visually in Storyboards, giving you a much better idea of the final appearance while designing.
- * Starting with iOS 8, [Size Classes][size-classes] allow you to design for different device types and screens without duplication.
+ * 在 Xcode 6 中，在 Storyboard 里终于能看到自定义的字体和 UI 控件样式了。这让你在设计时能更好地了解界面的最终外观。
+ * 从 iOS 8 开始，你可以用[Size Classes][size-classes]来设计同时支持各种屏幕尺寸的界面，省去了很多重复工作。
 
 
 
